@@ -1,12 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 const DateCalculator = () => {
   // Step and Count are the two states that we need to keep track of
   const [step, setStep] = useState<number>(1);
   const [count, setCount] = useState<number>(0);
-
-  // Today's date cont so we can compute the count
-  const today = new Date();
 
   // Method callback to increment the step
   const incrementStep = useCallback((): void => {
@@ -29,6 +26,15 @@ const DateCalculator = () => {
   }, [step]);
 
   // Compute the result using the step and count (using memoization)
+  const resultDate = useMemo((): string => {
+    // Today's date cont so we can compute the count
+    const today = new Date();
+
+    const result = new Date(today);
+    result.setDate(today.getDate() + count);
+
+    return result.toDateString();
+  }, [count]);
 
   return (
     <div className="flex flex-col gap-4 items-center justify-center h-screen">
@@ -71,7 +77,7 @@ const DateCalculator = () => {
       </div>
 
       {/* Result container */}
-      <div>Result container</div>
+      <div>{resultDate}</div>
     </div>
   );
 };
